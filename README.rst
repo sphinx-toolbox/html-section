@@ -86,3 +86,17 @@ To install with ``pip``:
 	$ python -m pip install git+https://github.com/sphinx-toolbox/html-section
 
 .. end installation
+
+Usage
+---------
+
+.. code-block:: rest
+
+	Contents
+	-----------
+
+	.. html-section::
+
+The section label ``Contents`` will only be shown with the HTML builder.
+However, the section content will still be visible.
+Consider using Sphinx's ``.. only:: html`` directive for that.
