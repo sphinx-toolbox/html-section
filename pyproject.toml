@@ -36,6 +36,7 @@ base-classifiers = [
     "Topic :: Documentation :: Sphinx",
     "Topic :: Software Development :: Documentation",
     "Topic :: Utilities",
+    "Typing :: Typed",
 ]
 python-versions = [ "3.6", "3.7", "3.8", "3.9",]
 python-implementations = [ "CPython",]
@@ -44,3 +45,4 @@ license-key = "BSD-3-Clause"
 package = "html_section"
 
 [tool.importcheck]
+always = ["html_section"]
