@@ -45,4 +45,4 @@ license-key = "BSD-3-Clause"
 package = "html_section"
 
 [tool.importcheck]
-always = ["html_section"]
+always = [ "html_section",]
