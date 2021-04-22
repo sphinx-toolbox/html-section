@@ -59,86 +59,107 @@ __all__ = ["MarkHTMLOnlySections", "HTMLSectionDirective", "depart_title", "setu
 logger = logging.getLogger(__name__)
 
 
-def visit_title(self: LaTeXTranslator, node: nodes.title) -> None:
-	parent = node.parent
-	if isinstance(parent, addnodes.seealso):
+def visit_title(translator: LaTeXTranslator, node: nodes.title) -> None:
+	"""
+	Visit a :class:`docutils.nodes.title` node.
+
+	:param translator:
+	:param node: The node itself.
+	"""
+
+	if isinstance(node.parent, addnodes.seealso):
 		# the environment already handles this
 		raise nodes.SkipNode
-	elif isinstance(parent, nodes.section):
-		if self.this_is_the_title:
+
+	elif isinstance(node.parent, nodes.section):
+		if translator.this_is_the_title:
 			if len(node.children) != 1 and not isinstance(node.children[0], nodes.Text):
 				logger.warning(__("document title is not a single Text node"), location=node)
-			if not self.elements["title"]:
+			if not translator.elements["title"]:
 				# text needs to be escaped since it is inserted into
 				# the output literally
-				self.elements["title"] = self.escape(node.astext())
-			self.this_is_the_title = 0
+				translator.elements["title"] = translator.escape(node.astext())
+			translator.this_is_the_title = 0
 			raise nodes.SkipNode
 		elif not node.get("only-html", False):
 
 			short = ''
 			if node.traverse(nodes.image):
-				short = ("[%s]" % self.escape(' '.join(clean_astext(node).split())))
+				short = f"[{translator.escape(' '.join(clean_astext(node).split()))}]"
 
 			try:
-				self.body.append(fr'\{self.sectionnames[self.sectionlevel]}{short}{{')
+				translator.body.append(fr'\{translator.sectionnames[translator.sectionlevel]}{short}{{')
 			except IndexError:
 				# just use "subparagraph", it's not numbered anyway
-				self.body.append(fr'\{self.sectionnames[-1]}{short}{{')
+				translator.body.append(fr'\{translator.sectionnames[-1]}{short}{{')
 			# breakpoint()
-			self.context.append('}\n' + self.hypertarget_to(node.parent))
+			translator.context.append(f'}}\n{translator.hypertarget_to(node.parent)}')
 		else:
-			self.body.append("$$POP_TO_HERE$$")
-			self.context.append('')
-			self.in_title = 0
+			translator.body.append("$$POP_TO_HERE$$")
+			translator.context.append('')
+			translator.in_title = 0
 			return
 
-	elif isinstance(parent, nodes.topic):
-		self.body.append(r'\sphinxstyletopictitle{')
-		self.context.append('}\n')
-	elif isinstance(parent, nodes.sidebar):
-		self.body.append(r'\sphinxstylesidebartitle{')
-		self.context.append('}\n')
-	elif isinstance(parent, nodes.Admonition):
-		self.body.append('{')
-		self.context.append('}\n')
-	elif isinstance(parent, nodes.table):
+	elif isinstance(node.parent, nodes.topic):
+		translator.body.append(r'\sphinxstyletopictitle{')
+		translator.context.append('}\n')
+	elif isinstance(node.parent, nodes.sidebar):
+		translator.body.append(r'\sphinxstylesidebartitle{')
+		translator.context.append('}\n')
+	elif isinstance(node.parent, nodes.Admonition):
+		translator.body.append('{')
+		translator.context.append('}\n')
+	elif isinstance(node.parent, nodes.table):
 		# Redirect body output until title is finished.
-		self.pushbody([])
+		translator.pushbody([])
 	else:
 		logger.warning(
 				__("encountered title node not in section, topic, table, admonition or sidebar"),
 				location=node,
 				)
-		self.body.append("\\sphinxstyleothertitle{")
-		self.context.append('}\n')
+		translator.body.append("\\sphinxstyleothertitle{")
+		translator.context.append('}\n')
 
-	self.in_title = 1
+	translator.in_title = 1
 
 
-def depart_title(self: LaTeXTranslator, node: nodes.title) -> None:
-	while "$$POP_TO_HERE$$" in self.body:
-		self.body.pop()
+def depart_title(translator: LaTeXTranslator, node: nodes.title) -> None:
+	"""
+	Depart a :class:`docutils.nodes.title` node.
 
-	self.in_title = 0
+	:param translator:
+	:param node: The node itself.
+	"""
+
+	while "$$POP_TO_HERE$$" in translator.body:
+		translator.body.pop()
+
+	translator.in_title = 0
 	if isinstance(node.parent, nodes.table):
-		self.table.caption = self.popbody()
+		translator.table.caption = translator.popbody()
 	else:
-		self.body.append(self.context.pop())
+		translator.body.append(translator.context.pop())
 
 
 class HTMLSectionDirective(SphinxDirective):
+	"""
+	Sphinx directive for marking a section as being HTML-only.
+	"""
 
-	def run(self) -> List[nodes.Node]:
+	def run(self) -> List[nodes.Node]:  # noqa: D102
 		paragraph = nodes.paragraph()
 		paragraph["only-html"] = True
 		return [paragraph]
 
 
 class MarkHTMLOnlySections(sphinx.transforms.SphinxTransform):
+	"""
+	Sphinx transform to mark the node, its parent and siblings as being HTML-only.
+	"""
+
 	default_priority = 999
 
-	def apply(self, **kwargs) -> None:
+	def apply(self, **kwargs) -> None:  # noqa: D102
 		for node in self.document.traverse(nodes.paragraph):
 			if node.get("only-html", False):
 				for child_node in node.parent.children:
