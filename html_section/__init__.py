@@ -81,7 +81,7 @@ def visit_title(translator: LaTeXTranslator, node: nodes.title) -> None:
 				translator.elements["title"] = translator.escape(node.astext())
 			translator.this_is_the_title = 0
 			raise nodes.SkipNode
-		elif not node.get("only-html", False):
+		else:
 
 			short = ''
 			if node.traverse(nodes.image):
@@ -94,11 +94,6 @@ def visit_title(translator: LaTeXTranslator, node: nodes.title) -> None:
 				translator.body.append(fr'\{translator.sectionnames[-1]}{short}{{')
 			# breakpoint()
 			translator.context.append(f'}}\n{translator.hypertarget_to(node.parent)}')
-		else:
-			translator.body.append("$$POP_TO_HERE$$")
-			translator.context.append('')
-			translator.in_title = 0
-			return
 
 	elif isinstance(node.parent, nodes.topic):
 		translator.body.append(r'\sphinxstyletopictitle{')
@@ -131,14 +126,15 @@ def depart_title(translator: LaTeXTranslator, node: nodes.title) -> None:
 	:param node: The node itself.
 	"""
 
-	while "$$POP_TO_HERE$$" in translator.body:
-		translator.body.pop()
-
 	translator.in_title = 0
 	if isinstance(node.parent, nodes.table):
 		translator.table.caption = translator.popbody()
 	else:
 		translator.body.append(translator.context.pop())
+
+
+class html_section_indicator(nodes.paragraph):
+	pass
 
 
 class HTMLSectionDirective(SphinxDirective):
@@ -147,9 +143,7 @@ class HTMLSectionDirective(SphinxDirective):
 	"""
 
 	def run(self) -> List[nodes.Node]:  # noqa: D102
-		paragraph = nodes.paragraph()
-		paragraph["only-html"] = True
-		return [paragraph]
+		return [html_section_indicator()]
 
 
 class MarkHTMLOnlySections(sphinx.transforms.SphinxTransform):
@@ -160,13 +154,8 @@ class MarkHTMLOnlySections(sphinx.transforms.SphinxTransform):
 	default_priority = 999
 
 	def apply(self, **kwargs) -> None:  # noqa: D102
-		for node in self.document.traverse(nodes.paragraph):
-			if node.get("only-html", False):
-				for child_node in node.parent.children:
-					with suppress(TypeError):
-						child_node["only-html"] = True
-
-			node.parent["only-html"] = node.get("only-html", False)
+		for node in self.document.traverse(html_section_indicator):
+			node.parent.replace_self(node.parent.children[node.parent.children.index(node):])
 
 
 def setup(app: Sphinx):
