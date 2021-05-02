@@ -154,8 +154,16 @@ class MarkHTMLOnlySections(sphinx.transforms.SphinxTransform):
 	default_priority = 999
 
 	def apply(self, **kwargs) -> None:  # noqa: D102
+		if not hasattr(self.env, "html_only_node_docnames"):
+			self.env.html_only_node_docnames = set()
+
 		for node in self.document.traverse(html_section_indicator):
+			self.env.html_only_node_docnames.add(node["docname"])
 			node.parent.replace_self(node.parent.children[node.parent.children.index(node):])
+
+
+def purge_outdated(app: Sphinx, env, added, changed, removed):
+	return list(getattr(env, "html_only_node_docnames", []))
 
 
 def setup(app: Sphinx):
@@ -168,3 +176,4 @@ def setup(app: Sphinx):
 	app.add_directive("html-section", HTMLSectionDirective)
 	app.add_transform(MarkHTMLOnlySections)
 	app.add_node(nodes.title, override=True, latex=(visit_title, depart_title))
+	app.connect("env-get-outdated", purge_outdated)
