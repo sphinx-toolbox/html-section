@@ -161,7 +161,7 @@ class MarkHTMLOnlySections(sphinx.transforms.SphinxTransform):
 			return
 
 		for node in self.document.traverse(html_section_indicator):
-			self.env.html_only_node_docnames.add(node["docname"])
+			self.env.html_only_node_docnames.add(self.env.docname)
 			node.parent.replace_self(node.parent.children[node.parent.children.index(node):])
 
 
