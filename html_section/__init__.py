@@ -157,6 +157,9 @@ class MarkHTMLOnlySections(sphinx.transforms.SphinxTransform):
 		if not hasattr(self.env, "html_only_node_docnames"):
 			self.env.html_only_node_docnames = set()
 
+		if self.app.builder.format.lower() == "html":
+			return
+
 		for node in self.document.traverse(html_section_indicator):
 			self.env.html_only_node_docnames.add(node["docname"])
 			node.parent.replace_self(node.parent.children[node.parent.children.index(node):])
