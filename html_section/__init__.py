@@ -34,7 +34,6 @@ Sphinx extension to hide section headers with non-HTML builders.
 #
 
 # stdlib
-from contextlib import suppress
 from typing import List
 
 # 3rd party
@@ -54,7 +53,17 @@ __license__: str = "BSD License"
 __version__: str = "0.0.0"
 __email__: str = "dominic@davis-foster.co.uk"
 
-__all__ = ["MarkHTMLOnlySections", "HTMLSectionDirective", "depart_title", "setup", "visit_title"]
+__all__ = [
+		"html_section_indicator",
+		"HTMLSectionDirective",
+		"RemoveHTMLOnlySections",
+		"phantom_section_indicator",
+		"PhantomSectionDirective",
+		"RemovePhantomSections",
+		"visit_title",
+		"depart_title",
+		"setup",
+		]
 
 logger = logging.getLogger(__name__)
 
@@ -146,7 +155,7 @@ class HTMLSectionDirective(SphinxDirective):
 		return [html_section_indicator()]
 
 
-class MarkHTMLOnlySections(sphinx.transforms.SphinxTransform):
+class RemoveHTMLOnlySections(sphinx.transforms.SphinxTransform):
 	"""
 	Sphinx transform to mark the node, its parent and siblings as being HTML-only.
 	"""
@@ -165,8 +174,40 @@ class MarkHTMLOnlySections(sphinx.transforms.SphinxTransform):
 			node.parent.replace_self(node.parent.children[node.parent.children.index(node):])
 
 
+class phantom_section_indicator(nodes.paragraph):
+	pass
+
+
+class PhantomSectionDirective(SphinxDirective):
+	"""
+	Sphinx directive for marking a section as being a phantom section.
+	"""
+
+	def run(self) -> List[nodes.Node]:  # noqa: D102
+		return [phantom_section_indicator()]
+
+
+class RemovePhantomSections(sphinx.transforms.SphinxTransform):
+	"""
+	Sphinx transform to mark the node, its parent and siblings as being a phantom section.
+	"""
+
+	default_priority = 999
+
+	def apply(self, **kwargs) -> None:  # noqa: D102
+		if not hasattr(self.env, "phantom_node_docnames"):
+			self.env.phantom_node_docnames = set()
+
+		for node in self.document.traverse(phantom_section_indicator):
+			self.env.phantom_node_docnames.add(self.env.docname)
+			node.parent.replace_self(node.parent.children[node.parent.children.index(node):])
+
+
 def purge_outdated(app: Sphinx, env, added, changed, removed):
-	return list(getattr(env, "html_only_node_docnames", []))
+	return [
+			*getattr(env, "html_only_node_docnames", []),
+			*getattr(env, "phantom_node_docnames", []),
+			]
 
 
 def setup(app: Sphinx):
@@ -177,6 +218,10 @@ def setup(app: Sphinx):
 	"""
 
 	app.add_directive("html-section", HTMLSectionDirective)
-	app.add_transform(MarkHTMLOnlySections)
+	app.add_directive("phantom-section", PhantomSectionDirective)
+
+	app.add_transform(RemoveHTMLOnlySections)
+	app.add_transform(RemovePhantomSections)
+
 	app.add_node(nodes.title, override=True, latex=(visit_title, depart_title))
 	app.connect("env-get-outdated", purge_outdated)
