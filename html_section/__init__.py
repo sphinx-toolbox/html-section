@@ -34,13 +34,14 @@ Sphinx extension to hide section headers with non-HTML builders.
 #
 
 # stdlib
-from typing import List
+from typing import List, Set, cast
 
 # 3rd party
 import sphinx.transforms
 from docutils import nodes
 from sphinx import addnodes
 from sphinx.application import Sphinx
+from sphinx.environment import BuildEnvironment
 from sphinx.locale import __
 from sphinx.util import logging
 from sphinx.util.docutils import SphinxDirective
@@ -66,6 +67,11 @@ __all__ = [
 		]
 
 logger = logging.getLogger(__name__)
+
+
+class _BuildEnvironment(BuildEnvironment):
+	html_only_node_docnames: Set[str]
+	phantom_node_docnames: Set[str]
 
 
 def visit_title(translator: LaTeXTranslator, node: nodes.title) -> None:
@@ -143,7 +149,9 @@ def depart_title(translator: LaTeXTranslator, node: nodes.title) -> None:
 
 
 class html_section_indicator(nodes.paragraph):
-	pass
+	"""
+	Docutils node to mark sections as being HTML only.
+	"""
 
 
 class HTMLSectionDirective(SphinxDirective):
@@ -163,19 +171,23 @@ class RemoveHTMLOnlySections(sphinx.transforms.SphinxTransform):
 	default_priority = 999
 
 	def apply(self, **kwargs) -> None:  # noqa: D102
-		if not hasattr(self.env, "html_only_node_docnames"):
-			self.env.html_only_node_docnames = set()
+		env = cast(_BuildEnvironment, self.env)
+
+		if not hasattr(env, "html_only_node_docnames"):
+			env.html_only_node_docnames = set()
 
 		if self.app.builder.format.lower() == "html":
 			return
 
 		for node in self.document.traverse(html_section_indicator):
-			self.env.html_only_node_docnames.add(self.env.docname)
+			env.html_only_node_docnames.add(env.docname)
 			node.parent.replace_self(node.parent.children[node.parent.children.index(node):])
 
 
 class phantom_section_indicator(nodes.paragraph):
-	pass
+	"""
+	Docutils node to mark a section as being a phantom section.
+	"""
 
 
 class PhantomSectionDirective(SphinxDirective):
@@ -195,11 +207,13 @@ class RemovePhantomSections(sphinx.transforms.SphinxTransform):
 	default_priority = 999
 
 	def apply(self, **kwargs) -> None:  # noqa: D102
-		if not hasattr(self.env, "phantom_node_docnames"):
-			self.env.phantom_node_docnames = set()
+		env = cast(_BuildEnvironment, self.env)
+
+		if not hasattr(env, "phantom_node_docnames"):
+			env.phantom_node_docnames = set()
 
 		for node in self.document.traverse(phantom_section_indicator):
-			self.env.phantom_node_docnames.add(self.env.docname)
+			env.phantom_node_docnames.add(env.docname)
 			node.parent.replace_self(node.parent.children[node.parent.children.index(node):])
 
 
