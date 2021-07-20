@@ -176,7 +176,7 @@ class RemoveHTMLOnlySections(sphinx.transforms.SphinxTransform):
 		if not hasattr(env, "html_only_node_docnames"):
 			env.html_only_node_docnames = set()
 
-		if self.app.builder.format.lower() == "html":
+		if self.app.builder.format.lower() == "html":  # type: ignore
 			return
 
 		for node in self.document.traverse(html_section_indicator):
