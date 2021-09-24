@@ -44,8 +44,8 @@ html-section
 	:target: https://github.com/sphinx-toolbox/html-section/actions?query=workflow%3A%22mypy%22
 	:alt: mypy status
 
-.. |requires| image:: https://requires.io/github/sphinx-toolbox/html-section/requirements.svg?branch=master
-	:target: https://requires.io/github/sphinx-toolbox/html-section/requirements/?branch=master
+.. |requires| image:: https://dependency-dash.herokuapp.com/github/sphinx-toolbox/html-section/badge.svg
+	:target: https://dependency-dash.herokuapp.com/github/sphinx-toolbox/html-section/
 	:alt: Requirements Status
 
 .. |codefactor| image:: https://img.shields.io/codefactor/grade/github/sphinx-toolbox/html-section?logo=codefactor
