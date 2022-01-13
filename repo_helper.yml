@@ -12,16 +12,17 @@ short_desc: 'Sphinx extension to hide section headers with non-HTML builders.'
 
 use_whey: true
 enable_conda: false
-enable_tests: false
 enable_docs: false
 on_pypi: false
-mypy_version: "0.910"
+min_coverage: 75
 
 python_versions:
   - 3.6
   - 3.7
   - 3.8
   - 3.9
+  - "3.10"
+  - 3.11-dev
 
 keywords:
   - sphinx
@@ -30,10 +31,14 @@ keywords:
 
 third_party_version_matrix:
   sphinx:
-    - 3.2
     - 3.3
     - 3.4
     - 3.5
+    - 4.0
+    - 4.1
+    - 4.2
+    - 4.3
+
 
 classifiers:
  - 'Development Status :: 3 - Alpha'

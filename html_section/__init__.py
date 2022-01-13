@@ -82,7 +82,7 @@ def visit_title(translator: LaTeXTranslator, node: nodes.title) -> None:
 	:param node: The node itself.
 	"""
 
-	if isinstance(node.parent, addnodes.seealso):
+	if isinstance(node.parent, addnodes.seealso):  # pragma: no cover
 		# the environment already handles this
 		raise nodes.SkipNode
 
@@ -96,7 +96,9 @@ def visit_title(translator: LaTeXTranslator, node: nodes.title) -> None:
 				translator.elements["title"] = translator.escape(node.astext())
 			translator.this_is_the_title = 0
 			raise nodes.SkipNode
-		else:
+
+		# This is all from the original visit_title function
+		else:  # pragma: no cover
 
 			short = ''
 			if node.traverse(nodes.image):
@@ -110,19 +112,20 @@ def visit_title(translator: LaTeXTranslator, node: nodes.title) -> None:
 			# breakpoint()
 			translator.context.append(f'}}\n{translator.hypertarget_to(node.parent)}')
 
-	elif isinstance(node.parent, nodes.topic):
+	# This is all from the original visit_title function
+	elif isinstance(node.parent, nodes.topic):  # pragma: no cover
 		translator.body.append(r'\sphinxstyletopictitle{')
 		translator.context.append('}\n')
-	elif isinstance(node.parent, nodes.sidebar):
+	elif isinstance(node.parent, nodes.sidebar):  # pragma: no cover
 		translator.body.append(r'\sphinxstylesidebartitle{')
 		translator.context.append('}\n')
-	elif isinstance(node.parent, nodes.Admonition):
+	elif isinstance(node.parent, nodes.Admonition):  # pragma: no cover
 		translator.body.append('{')
 		translator.context.append('}\n')
-	elif isinstance(node.parent, nodes.table):
+	elif isinstance(node.parent, nodes.table):  # pragma: no cover
 		# Redirect body output until title is finished.
 		translator.pushbody([])
-	else:
+	else:  # pragma: no cover
 		logger.warning(
 				__("encountered title node not in section, topic, table, admonition or sidebar"),
 				location=node,
@@ -133,7 +136,10 @@ def visit_title(translator: LaTeXTranslator, node: nodes.title) -> None:
 	translator.in_title = 1
 
 
-def depart_title(translator: LaTeXTranslator, node: nodes.title) -> None:
+def depart_title(
+		translator: LaTeXTranslator,
+		node: nodes.title,
+		) -> None:  # pragma: no cover
 	"""
 	Depart a :class:`docutils.nodes.title` node.
 

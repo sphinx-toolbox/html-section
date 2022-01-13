@@ -31,5 +31,18 @@ lines_between_types = 0
 use_parentheses = true
 remove_redundant_aliases = true
 default_section = "THIRDPARTY"
-known_third_party = [ "docutils", "sphinx",]
+known_third_party = [
+    "coincidence",
+    "coverage",
+    "coverage_pyver_pragma",
+    "docutils",
+    "domdf_python_tools",
+    "importlib_metadata",
+    "pytest",
+    "pytest_cov",
+    "pytest_randomly",
+    "pytest_timeout",
+    "sphinx",
+    "sphinx_toolbox",
+]
 known_first_party = "html_section"

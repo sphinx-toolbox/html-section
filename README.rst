@@ -16,7 +16,7 @@ html-section
 	:widths: 10 90
 
 	* - Tests
-	  - |actions_linux| |actions_windows| |actions_macos|
+	  - |actions_linux| |actions_windows| |actions_macos| |coveralls|
 	* - Activity
 	  - |commits-latest| |commits-since| |maintained|
 	* - QA
@@ -48,6 +48,10 @@ html-section
 	:target: https://dependency-dash.herokuapp.com/github/sphinx-toolbox/html-section/
 	:alt: Requirements Status
 
+.. |coveralls| image:: https://img.shields.io/coveralls/github/sphinx-toolbox/html-section/master?logo=coveralls
+	:target: https://coveralls.io/github/sphinx-toolbox/html-section?branch=master
+	:alt: Coverage
+
 .. |codefactor| image:: https://img.shields.io/codefactor/grade/github/sphinx-toolbox/html-section?logo=codefactor
 	:target: https://www.codefactor.io/repository/github/sphinx-toolbox/html-section
 	:alt: CodeFactor Grade
@@ -67,7 +71,7 @@ html-section
 	:target: https://github.com/sphinx-toolbox/html-section/commit/master
 	:alt: GitHub last commit
 
-.. |maintained| image:: https://img.shields.io/maintenance/yes/2021
+.. |maintained| image:: https://img.shields.io/maintenance/yes/2022
 	:alt: Maintenance
 
 .. end shields
