@@ -17,8 +17,10 @@ html-section
 
 	* - Tests
 	  - |actions_linux| |actions_windows| |actions_macos| |coveralls|
+	* - PyPI
+	  - |pypi-version| |supported-versions| |supported-implementations| |wheel|
 	* - Activity
-	  - |commits-latest| |commits-since| |maintained|
+	  - |commits-latest| |commits-since| |maintained| |pypi-downloads|
 	* - QA
 	  - |codefactor| |actions_flake8| |actions_mypy|
 	* - Other
@@ -56,6 +58,22 @@ html-section
 	:target: https://www.codefactor.io/repository/github/sphinx-toolbox/html-section
 	:alt: CodeFactor Grade
 
+.. |pypi-version| image:: https://img.shields.io/pypi/v/html-section
+	:target: https://pypi.org/project/html-section/
+	:alt: PyPI - Package Version
+
+.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/html-section?logo=python&logoColor=white
+	:target: https://pypi.org/project/html-section/
+	:alt: PyPI - Supported Python Versions
+
+.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/html-section
+	:target: https://pypi.org/project/html-section/
+	:alt: PyPI - Supported Implementations
+
+.. |wheel| image:: https://img.shields.io/pypi/wheel/html-section
+	:target: https://pypi.org/project/html-section/
+	:alt: PyPI - Wheel
+
 .. |license| image:: https://img.shields.io/github/license/sphinx-toolbox/html-section
 	:target: https://github.com/sphinx-toolbox/html-section/blob/master/LICENSE
 	:alt: License
@@ -74,6 +92,10 @@ html-section
 .. |maintained| image:: https://img.shields.io/maintenance/yes/2022
 	:alt: Maintenance
 
+.. |pypi-downloads| image:: https://img.shields.io/pypi/dm/html-section
+	:target: https://pypi.org/project/html-section/
+	:alt: PyPI - Downloads
+
 .. end shields
 
 Installation
@@ -81,15 +103,25 @@ Installation
 
 .. start installation
 
-``html-section`` can be installed from GitHub.
+``html-section`` can be installed from PyPI.
 
 To install with ``pip``:
 
 .. code-block:: bash
 
-	$ python -m pip install git+https://github.com/sphinx-toolbox/html-section
+	$ python -m pip install html-section
 
 .. end installation
+
+Then enable the extension by adding the following to your ``conf.py`` file::
+
+.. code-block:: python
+
+	extensions = [
+		...,  # Other extensions go here
+		"html_section",
+	]
+
 
 Usage
 ---------
@@ -104,3 +136,16 @@ Usage
 The section label ``Contents`` will only be shown with the HTML builder.
 However, the section content will still be visible.
 Consider using Sphinx's ``.. only:: html`` directive for that.
+
+
+.. code-block:: rest
+
+	Contents
+	-----------
+
+	.. phantom-section::
+
+The section label ``Contents`` will be hidden with all builders,
+but the section will still exist in the structure of the document
+(i.e. a new section will be started, without a label).
+The section content will still be visible.
