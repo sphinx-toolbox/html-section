@@ -223,7 +223,13 @@ class RemovePhantomSections(sphinx.transforms.SphinxTransform):
 			node.parent.replace_self(node.parent.children[node.parent.children.index(node):])
 
 
-def purge_outdated(app: Sphinx, env, added, changed, removed):
+def purge_outdated(
+		app: Sphinx,
+		env: BuildEnvironment,
+		added: List[str],
+		changed: List[str],
+		removed: List[str],
+		):
 	return [
 			*getattr(env, "html_only_node_docnames", []),
 			*getattr(env, "phantom_node_docnames", []),

@@ -2,7 +2,7 @@
 import re
 import shutil
 import sys
-from typing import Union
+from typing import Union, cast
 
 # 3rd party
 import pytest
@@ -11,8 +11,11 @@ from bs4 import BeautifulSoup  # type: ignore
 from coincidence.regressions import AdvancedFileRegressionFixture
 from domdf_python_tools.paths import PathPlus
 from domdf_python_tools.stringlist import StringList
+from domdf_python_tools.typing import PathLike
 from jinja2 import Template
 from pytest_regressions.common import check_text_files
+from sphinx.application import Sphinx
+from sphinx.builders import Builder
 from sphinx_toolbox.testing import HTMLRegressionFixture
 
 
@@ -30,20 +33,20 @@ def doc_root(tmp_pathplus: PathPlus):
 
 @pytest.mark.usefixtures("doc_root")
 @pytest.mark.sphinx("html", testroot="test-html-section")
-def test_build_example(app):
+def test_build_example(app: Sphinx):
 	app.build()
 	app.build()
 
 
 @pytest.mark.usefixtures("doc_root")
 @pytest.mark.sphinx("html", testroot="test-html-section")
-def test_html_output(app, html_regression: HTMLRegressionFixture):
+def test_html_output(app: Sphinx, html_regression: HTMLRegressionFixture):
 
-	assert app.builder.name.lower() == "html"
+	assert cast(Builder, app.builder).name.lower() == "html"
 
 	app.build(force_all=True)
 
-	output_file = PathPlus(app.outdir / "index.html")
+	output_file = PathPlus(app.outdir) / "index.html"
 	page = BeautifulSoup(output_file.read_text(), "html5lib")
 	html_regression.check(page, jinja2=False)
 
@@ -76,8 +79,7 @@ class LaTeXRegressionFixture(AdvancedFileRegressionFixture):
 
 		__tracebackhide__ = True
 
-		def check_fn(obtained_filename, expected_filename):
-			print(obtained_filename, expected_filename)
+		def check_fn(obtained_filename: PathPlus, expected_filename: PathLike):
 			expected_filename = PathPlus(expected_filename)
 
 			template = Template(
@@ -123,11 +125,11 @@ def latex_regression(datadir, original_datadir, request) -> LaTeXRegressionFixtu
 
 @pytest.mark.usefixtures("doc_root")
 @pytest.mark.sphinx("latex", testroot="test-html-section")
-def test_latex_output(app, latex_regression: LaTeXRegressionFixture):
+def test_latex_output(app: Sphinx, latex_regression: LaTeXRegressionFixture):
 
-	assert app.builder.name.lower() == "latex"
+	assert cast(Builder, app.builder).name.lower() == "latex"
 
 	app.build(force_all=True)
 
-	output_file = PathPlus(app.outdir / "python.tex")
+	output_file = PathPlus(app.outdir) / "python.tex"
 	latex_regression.check(StringList(output_file.read_lines()))

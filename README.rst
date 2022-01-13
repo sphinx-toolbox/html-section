@@ -113,14 +113,14 @@ To install with ``pip``:
 
 .. end installation
 
-Then enable the extension by adding the following to your ``conf.py`` file::
+Then enable the extension by adding the following to your ``conf.py`` file:
 
 .. code-block:: python
 
 	extensions = [
-		...,  # Other extensions go here
-		"html_section",
-	]
+			...,  # Other extensions go here
+			"html_section",
+			]
 
 
 Usage
