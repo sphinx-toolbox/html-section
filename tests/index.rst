@@ -9,6 +9,13 @@ HTML
 
 This section's heading should only be in the HTML output.
 
+LaTeX
+-----------
+
+.. latex-section::
+
+This section's heading should only be in the LaTeX output.
+
 
 Phantom
 -----------

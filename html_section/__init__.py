@@ -72,6 +72,7 @@ logger = logging.getLogger(__name__)
 class _BuildEnvironment(BuildEnvironment):
 	html_only_node_docnames: Set[str]
 	phantom_node_docnames: Set[str]
+	latex_only_node_docnames: Set[str]
 
 
 def visit_title(translator: LaTeXTranslator, node: nodes.title) -> None:
@@ -223,6 +224,48 @@ class RemovePhantomSections(sphinx.transforms.SphinxTransform):
 			node.parent.replace_self(node.parent.children[node.parent.children.index(node):])
 
 
+class latex_section_indicator(nodes.paragraph):
+	"""
+	Docutils node to mark sections as being HTML only.
+
+	.. versionadded:: 0.2.0
+	"""
+
+
+class LaTeXSectionDirective(SphinxDirective):
+	"""
+	Sphinx directive for marking a section as being LaTeX-only.
+
+	.. versionadded:: 0.2.0
+	"""
+
+	def run(self) -> List[nodes.Node]:
+		return [latex_section_indicator()]
+
+
+class RemoveLaTeXOnlySections(sphinx.transforms.SphinxTransform):
+	"""
+	Sphinx transform to mark the node, its parent and siblings as being LaTeX-only.
+
+	.. versionadded:: 0.2.0
+	"""
+
+	default_priority = 999
+
+	def apply(self, **kwargs) -> None:
+		env = cast(_BuildEnvironment, self.env)
+
+		if not hasattr(env, "latex_only_node_docnames"):
+			env.latex_only_node_docnames = set()
+
+		if self.app.builder.format.lower() == "latex":
+			return
+
+		for node in self.document.traverse(latex_section_indicator):
+			env.latex_only_node_docnames.add(env.docname)
+			node.parent.replace_self(node.parent.children[node.parent.children.index(node):])
+
+
 def purge_outdated(
 		app: Sphinx,
 		env: BuildEnvironment,
@@ -233,6 +276,7 @@ def purge_outdated(
 	return [
 			*getattr(env, "html_only_node_docnames", []),
 			*getattr(env, "phantom_node_docnames", []),
+			*getattr(env, "latex_only_node_docnames", []),
 			]
 
 
@@ -245,9 +289,11 @@ def setup(app: Sphinx):
 
 	app.add_directive("html-section", HTMLSectionDirective)
 	app.add_directive("phantom-section", PhantomSectionDirective)
+	app.add_directive("latex-section", LaTeXSectionDirective)
 
 	app.add_transform(RemoveHTMLOnlySections)
 	app.add_transform(RemovePhantomSections)
+	app.add_transform(RemoveLaTeXOnlySections)
 
 	app.add_node(nodes.title, override=True, latex=(visit_title, depart_title))
 	app.connect("env-get-outdated", purge_outdated)

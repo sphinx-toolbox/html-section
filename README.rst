@@ -134,8 +134,22 @@ Usage
 	.. html-section::
 
 The section label ``Contents`` will only be shown with the HTML builder.
-However, the section content will still be visible.
+However, the section content will still be visible, and the heading will appear in the table of contents.
 Consider using Sphinx's ``.. only:: html`` directive for that.
+
+
+.. code-block:: rest
+
+	Contents
+	-----------
+
+	.. latex-section::
+
+The section label ``Contents`` will only be shown with the LaTeX builder.
+However, the section content will still be visible, and the heading will appear in the table of contents.
+Consider using Sphinx's ``.. only:: latex`` directive for that.
+
+*New in version 0.2.0^
 
 
 .. code-block:: rest
@@ -148,4 +162,4 @@ Consider using Sphinx's ``.. only:: html`` directive for that.
 The section label ``Contents`` will be hidden with all builders,
 but the section will still exist in the structure of the document
 (i.e. a new section will be started, without a label).
-The section content will still be visible.
+The section content will still be visible, and the heading will appear in the table of contents.
