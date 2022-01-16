@@ -13,7 +13,7 @@ short_desc: 'Sphinx extension to hide section headers with non-HTML builders.'
 use_whey: true
 enable_conda: false
 enable_docs: false
-min_coverage: 75
+min_coverage: 95
 
 python_versions:
   - 3.6
