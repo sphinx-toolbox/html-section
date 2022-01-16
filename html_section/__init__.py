@@ -41,6 +41,7 @@ import sphinx.transforms
 from docutils import nodes
 from sphinx import addnodes
 from sphinx.application import Sphinx
+from sphinx.builders import Builder
 from sphinx.environment import BuildEnvironment
 from sphinx.locale import __
 from sphinx.util import logging
@@ -258,7 +259,7 @@ class RemoveLaTeXOnlySections(sphinx.transforms.SphinxTransform):
 		if not hasattr(env, "latex_only_node_docnames"):
 			env.latex_only_node_docnames = set()
 
-		if self.app.builder.format.lower() == "latex":
+		if cast(Builder, self.app.builder).format.lower() == "latex":
 			return
 
 		for node in self.document.traverse(latex_section_indicator):
