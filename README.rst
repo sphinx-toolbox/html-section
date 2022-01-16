@@ -149,7 +149,7 @@ The section label ``Contents`` will only be shown with the LaTeX builder.
 However, the section content will still be visible, and the heading will appear in the table of contents.
 Consider using Sphinx's ``.. only:: latex`` directive for that.
 
-*New in version 0.2.0^
+*New in version 0.2.0*
 
 
 .. code-block:: rest
