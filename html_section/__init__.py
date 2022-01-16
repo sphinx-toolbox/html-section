@@ -52,7 +52,7 @@ from sphinx.writers.latex import LaTeXTranslator
 __author__: str = "Dominic Davis-Foster"
 __copyright__: str = "2021 Dominic Davis-Foster"
 __license__: str = "BSD License"
-__version__: str = "0.2.0"
+__version__: str = "0.2.0.post1"
 __email__: str = "dominic@davis-foster.co.uk"
 
 __all__ = [
