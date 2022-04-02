@@ -107,19 +107,19 @@ def visit_title(translator: LaTeXTranslator, node: nodes.title) -> None:
 				short = f"[{translator.escape(' '.join(clean_astext(node).split()))}]"
 
 			try:
-				translator.body.append(fr'\{translator.sectionnames[translator.sectionlevel]}{short}{{')
+				translator.body.append(f"\\{translator.sectionnames[translator.sectionlevel]}{short}{{")
 			except IndexError:
 				# just use "subparagraph", it's not numbered anyway
-				translator.body.append(fr'\{translator.sectionnames[-1]}{short}{{')
+				translator.body.append(f"\\{translator.sectionnames[-1]}{short}{{")
 			# breakpoint()
-			translator.context.append(f'}}\n{translator.hypertarget_to(node.parent)}')
+			translator.context.append(f"}}\n{translator.hypertarget_to(node.parent)}")
 
 	# This is all from the original visit_title function
 	elif isinstance(node.parent, nodes.topic):  # pragma: no cover
-		translator.body.append(r'\sphinxstyletopictitle{')
+		translator.body.append(r"\sphinxstyletopictitle{")
 		translator.context.append('}\n')
 	elif isinstance(node.parent, nodes.sidebar):  # pragma: no cover
-		translator.body.append(r'\sphinxstylesidebartitle{')
+		translator.body.append(r"\sphinxstylesidebartitle{")
 		translator.context.append('}\n')
 	elif isinstance(node.parent, nodes.Admonition):  # pragma: no cover
 		translator.body.append('{')
