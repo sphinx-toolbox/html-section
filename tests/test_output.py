@@ -41,7 +41,7 @@ def test_html_output(app: Sphinx, html_regression: HTMLRegressionFixture):
 
 	output_file = PathPlus(app.outdir) / "index.html"
 	page = BeautifulSoup(output_file.read_text(), "html5lib")
-	html_regression.check(page, jinja2=False)
+	html_regression.check(page, jinja2=True)
 
 
 @pytest.mark.usefixtures("doc_root")

@@ -1,9 +1,12 @@
+{% set heading = ("heading" if sphinx_version >= (5, 0) else 'headline') -%}
 <!DOCTYPE html>
-<html>
+<html{% if sphinx_version >= (5, 0) %} lang="en"{% endif %}>
  <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>
+  {% if docutils_version >= (0, 18) %}<meta content="Docutils 0.18.1: http://docutils.sourceforge.net/" name="generator"/>
+  {% elif docutils_version >= (0, 17) %}<meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+  {% endif %}<title>
    Demo — Python  documentation
   </title>
   <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js">
@@ -11,7 +14,9 @@
   <script src="_static/jquery.js">
   </script>
   <script src="_static/underscore.js">
-  </script>
+  </script>{% if sphinx_version >= (5, 0) %}
+  <script src="_static/_sphinx_javascript_frameworks_compat.js">
+  </script>{% endif %}
   <script src="_static/doctools.js">
   </script>
   <meta content="width=device-width, initial-scale=0.9, maximum-scale=0.9" name="viewport"/>
@@ -21,17 +26,17 @@
    <div class="documentwrapper">
     <div class="bodywrapper">
      <div class="body" role="main">
-      <div class="section" id="demo">
+      <{% if docutils_version >= (0, 17) %}section{% else %}div class="section"{% endif %} id="demo">
        <h1>
         Demo
-        <a class="headerlink" href="#demo" title="Permalink to this headline">
+        <a class="headerlink" href="#demo" title="Permalink to this {{ heading }}">
          ¶
         </a>
        </h1>
-       <div class="section" id="html">
+       <{% if docutils_version >= (0, 17) %}section{% else %}div class="section"{% endif %} id="html">
         <h2>
          HTML
-         <a class="headerlink" href="#html" title="Permalink to this headline">
+         <a class="headerlink" href="#html" title="Permalink to this {{ heading }}">
           ¶
          </a>
         </h2>
@@ -40,7 +45,7 @@
         <p>
          This section’s heading should only be in the HTML output.
         </p>
-       </div>
+       </{% if docutils_version >= (0, 17) %}section{% else %}div{% endif %}>
        <p id="latex">
        </p>
        <p>
@@ -51,7 +56,7 @@
        <p>
         This section’s heading shouldn’t be present at all.
        </p>
-      </div>
+      </{% if docutils_version >= (0, 17) %}section{% else %}div{% endif %}>
      </div>
     </div>
    </div>
