@@ -4,7 +4,7 @@ from typing import cast
 
 # 3rd party
 import pytest
-from bs4 import BeautifulSoup  # type: ignore
+from bs4 import BeautifulSoup  # type: ignore[import]
 from domdf_python_tools.paths import PathPlus
 from domdf_python_tools.stringlist import StringList
 from sphinx.application import Sphinx
@@ -13,7 +13,7 @@ from sphinx_toolbox.testing import HTMLRegressionFixture, LaTeXRegressionFixture
 
 
 @pytest.fixture()
-def doc_root(tmp_pathplus: PathPlus):
+def doc_root(tmp_pathplus: PathPlus) -> None:
 	doc_root = tmp_pathplus.parent / "test-html-section"
 	doc_root.maybe_make()
 	(doc_root / "conf.py").write_clean("extensions = ['html_section']")
