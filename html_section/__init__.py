@@ -34,7 +34,7 @@ Sphinx extension to hide section headers with non-HTML builders.
 #
 
 # stdlib
-from typing import List, Set, cast
+from typing import Any, Dict, List, Set, Type, cast
 
 # 3rd party
 import sphinx.transforms
@@ -76,6 +76,14 @@ class _BuildEnvironment(BuildEnvironment):
 	latex_only_node_docnames: Set[str]
 
 
+def _traverse(node: nodes.Node, condition: Type[nodes.Node]) -> List[nodes.Node]:
+	# node.findall is available, otherwise node.traverse
+	if hasattr(node, "findall"):
+		return list(node.findall(condition))
+	else:
+		return node.traverse(condition)
+
+
 def visit_title(translator: LaTeXTranslator, node: nodes.title) -> None:
 	"""
 	Visit a :class:`docutils.nodes.title` node.
@@ -103,7 +111,7 @@ def visit_title(translator: LaTeXTranslator, node: nodes.title) -> None:
 		else:  # pragma: no cover
 
 			short = ''
-			if node.traverse(nodes.image):
+			if _traverse(node, nodes.image):
 				short = f"[{translator.escape(' '.join(clean_astext(node).split()))}]"
 
 			try:
@@ -184,12 +192,14 @@ class RemoveHTMLOnlySections(sphinx.transforms.SphinxTransform):
 		if not hasattr(env, "html_only_node_docnames"):
 			env.html_only_node_docnames = set()
 
-		if self.app.builder.format.lower() == "html":  # type: ignore
+		if self.app.builder.format.lower() == "html":  # type: ignore[union-attr]
 			return
 
-		for node in self.document.traverse(html_section_indicator):
+		for node in _traverse(self.document, html_section_indicator):
+			assert node.parent is not None
+			parent = cast(nodes.Element, node.parent)
 			env.html_only_node_docnames.add(env.docname)
-			node.parent.replace_self(node.parent.children[node.parent.children.index(node):])
+			parent.replace_self(parent.children[parent.children.index(node):])
 
 
 class phantom_section_indicator(nodes.paragraph):
@@ -220,9 +230,11 @@ class RemovePhantomSections(sphinx.transforms.SphinxTransform):
 		if not hasattr(env, "phantom_node_docnames"):
 			env.phantom_node_docnames = set()
 
-		for node in self.document.traverse(phantom_section_indicator):
+		for node in _traverse(self.document, phantom_section_indicator):
+			assert node.parent is not None
+			parent = cast(nodes.Element, node.parent)
 			env.phantom_node_docnames.add(env.docname)
-			node.parent.replace_self(node.parent.children[node.parent.children.index(node):])
+			parent.replace_self(parent.children[parent.children.index(node):])
 
 
 class latex_section_indicator(nodes.paragraph):
@@ -262,9 +274,11 @@ class RemoveLaTeXOnlySections(sphinx.transforms.SphinxTransform):
 		if cast(Builder, self.app.builder).format.lower() == "latex":
 			return
 
-		for node in self.document.traverse(latex_section_indicator):
+		for node in _traverse(self.document, latex_section_indicator):
+			assert node.parent is not None
+			parent = cast(nodes.Element, node.parent)
 			env.latex_only_node_docnames.add(env.docname)
-			node.parent.replace_self(node.parent.children[node.parent.children.index(node):])
+			parent.replace_self(parent.children[parent.children.index(node):])
 
 
 def purge_outdated(
@@ -273,7 +287,7 @@ def purge_outdated(
 		added: List[str],
 		changed: List[str],
 		removed: List[str],
-		):
+		) -> List[str]:
 	return [
 			*getattr(env, "html_only_node_docnames", []),
 			*getattr(env, "phantom_node_docnames", []),
@@ -281,7 +295,7 @@ def purge_outdated(
 			]
 
 
-def setup(app: Sphinx):
+def setup(app: Sphinx) -> Dict[str, Any]:
 	"""
 	Setup Sphinx Extension.
 
@@ -298,3 +312,5 @@ def setup(app: Sphinx):
 
 	app.add_node(nodes.title, override=True, latex=(visit_title, depart_title))
 	app.connect("env-get-outdated", purge_outdated)
+
+	return {"version": __version__}
