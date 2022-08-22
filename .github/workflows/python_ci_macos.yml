@@ -22,7 +22,7 @@ jobs:
     runs-on: "macos-latest"
     continue-on-error: ${{ matrix.config.experimental }}
     env:
-      USING_COVERAGE: '3.6,3.7,3.8,3.9,3.10,3.11.0-alpha.6'
+      USING_COVERAGE: '3.6,3.7,3.8,3.9,3.10,3.11.0-rc.1'
 
     strategy:
       fail-fast: False
@@ -62,7 +62,7 @@ jobs:
           python -VV
           python -m site
           python -m pip install --upgrade pip setuptools wheel
-          python -m pip install --upgrade tox virtualenv
+          python -m pip install --upgrade tox virtualenv!=20.16.0
 
       - name: "Run Tests for Python ${{ matrix.config.python-version }}"
         if: steps.setup-python.outcome == 'success'
