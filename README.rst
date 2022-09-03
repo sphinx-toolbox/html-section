@@ -46,8 +46,8 @@ html-section
 	:target: https://github.com/sphinx-toolbox/html-section/actions?query=workflow%3A%22mypy%22
 	:alt: mypy status
 
-.. |requires| image:: https://dependency-dash.herokuapp.com/github/sphinx-toolbox/html-section/badge.svg
-	:target: https://dependency-dash.herokuapp.com/github/sphinx-toolbox/html-section/
+.. |requires| image:: https://dependency-dash.repo-helper.uk/github/sphinx-toolbox/html-section/badge.svg
+	:target: https://dependency-dash.repo-helper.uk/github/sphinx-toolbox/html-section/
 	:alt: Requirements Status
 
 .. |coveralls| image:: https://img.shields.io/coveralls/github/sphinx-toolbox/html-section/master?logo=coveralls
