@@ -159,6 +159,7 @@ def depart_title(
 
 	translator.in_title = 0
 	if isinstance(node.parent, nodes.table):
+		assert translator.table is not None
 		translator.table.caption = translator.popbody()
 	else:
 		translator.body.append(translator.context.pop())
@@ -192,7 +193,7 @@ class RemoveHTMLOnlySections(sphinx.transforms.SphinxTransform):
 		if not hasattr(env, "html_only_node_docnames"):
 			env.html_only_node_docnames = set()
 
-		if self.app.builder.format.lower() == "html":  # type: ignore[union-attr]
+		if self.app.builder.format.lower() == "html":
 			return
 
 		for node in _traverse(self.document, html_section_indicator):

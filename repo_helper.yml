@@ -24,6 +24,7 @@ python_versions:
     sphinx:
      - 5.0
      - 5.1
+     - 5.2
   3.7:
   3.8:
   3.9:
@@ -37,7 +38,6 @@ keywords:
 
 third_party_version_matrix:
   sphinx:
-    - 3.2
     - 3.3
     - 3.4
     - 3.5
@@ -49,6 +49,7 @@ third_party_version_matrix:
     - 4.5
     - 5.0
     - 5.1
+    - 5.2
   docutils:
     - 0.16
     - 0.17
@@ -65,3 +66,6 @@ classifiers:
 
 mypy_deps:
  - types-docutils
+
+tox_unmanaged:
+ - testenv
