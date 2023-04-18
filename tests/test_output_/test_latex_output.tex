@@ -9,6 +9,10 @@
 \fi
 %% let collapsable pdf bookmarks panel have high depth per default
 \PassOptionsToPackage{bookmarksdepth=5}{hyperref}
+<% endif %><% if (docutils_version[:2] < (0, 18) and sphinx_version >= (5, 0)) or (python_version[:2] == (3, 7) and docutils_version[:2] == (0, 18)) or sphinx_version[:2] == (5, 3) %>
+<% endif %><% if sphinx_version >= (6, 0) %>
+\PassOptionsToPackage{booktabs}{sphinx}
+\PassOptionsToPackage{colorrows}{sphinx}
 <% endif %>
 \PassOptionsToPackage{warn}{textcomp}
 \usepackage[utf8]{inputenc}
