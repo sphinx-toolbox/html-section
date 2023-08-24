@@ -41,6 +41,12 @@ def test_html_output(app: Sphinx, html_regression: HTMLRegressionFixture):
 
 	output_file = PathPlus(app.outdir) / "index.html"
 	page = BeautifulSoup(output_file.read_text(), "html5lib")
+
+	for div in page.findAll("script"):
+		if div.get("src"):
+			div["src"] = div["src"].split("?v=")[0]
+			print(div["src"])
+
 	html_regression.check(page, jinja2=True)
 
 
