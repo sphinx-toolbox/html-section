@@ -1,6 +1,7 @@
 {% set heading = ("heading" if sphinx_version >= (5, 0) else 'headline') -%}
+{% set permalink = ("Link" if sphinx_version >= (7, 2) else 'Permalink') -%}
 <!DOCTYPE html>
-<html{% if sphinx_version >= (5, 0) %} lang="en"{% endif %}>
+<html{% if sphinx_version >= (7, 2) %} data-content_root="./"{% endif %}{% if sphinx_version >= (5, 0) %} lang="en"{% endif %}>
  <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -9,7 +10,7 @@
   {% endif %}<title>
    Demo — Python  documentation
   </title>
-  <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js">
+  <script {% if sphinx_version < (7, 2) %}data-url_root="./" id="documentation_options" {% endif %}src="_static/documentation_options.js">
   </script>{% if sphinx_version < (6, 0) %}
   <script src="_static/jquery.js">
   </script>
@@ -31,14 +32,14 @@
       <{% if docutils_version >= (0, 17) %}section{% else %}div class="section"{% endif %} id="demo">
        <h1>
         Demo
-        <a class="headerlink" href="#demo" title="Permalink to this {{ heading }}">
+        <a class="headerlink" href="#demo" title="{{ permalink }} to this {{ heading }}">
          ¶
         </a>
        </h1>
        <{% if docutils_version >= (0, 17) %}section{% else %}div class="section"{% endif %} id="html">
         <h2>
          HTML
-         <a class="headerlink" href="#html" title="Permalink to this {{ heading }}">
+         <a class="headerlink" href="#html" title="{{ permalink }} to this {{ heading }}">
           ¶
          </a>
         </h2>
