@@ -46,4 +46,4 @@ known_third_party = [
     "sphinx_jinja2_compat",
     "sphinx_toolbox",
 ]
-known_first_party = "html_section"
+known_first_party = [ "html_section",]
