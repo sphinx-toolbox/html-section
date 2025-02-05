@@ -1,10 +1,10 @@
 # stdlib
 import shutil
-from typing import cast
+from typing import Dict, List, cast
 
 # 3rd party
 import pytest
-from bs4 import BeautifulSoup  # type: ignore[import]
+from bs4 import BeautifulSoup
 from domdf_python_tools.paths import PathPlus
 from domdf_python_tools.stringlist import StringList
 from sphinx.application import Sphinx
@@ -42,7 +42,7 @@ def test_html_output(app: Sphinx, html_regression: HTMLRegressionFixture):
 	output_file = PathPlus(app.outdir) / "index.html"
 	page = BeautifulSoup(output_file.read_text(), "html5lib")
 
-	for div in page.findAll("script"):
+	for div in cast(List[Dict], page.find_all("script")):
 		if div.get("src"):
 			div["src"] = div["src"].split("?v=")[0]
 			print(div["src"])
