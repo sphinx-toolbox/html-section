@@ -16,22 +16,6 @@ enable_docs: false
 min_coverage: 95
 
 python_versions:
-  3.6:
-   matrix_exclude:
-    docutils:
-     - 0.17
-     - 0.18
-    sphinx:
-     - 5.0
-     - 5.1
-     - 5.2
-     - 5.3
-     - 6.0
-     - 6.1
-     - 6.2
-     - 7.0
-     - 7.1
-     - 7.2
   3.7:
    matrix_exclude:
     sphinx:
@@ -49,7 +33,7 @@ python_versions:
   "3.10":
   "3.11":
   "3.12":
-  3.13-dev:
+  3.13:
    matrix_exclude:
     sphinx:
       - 3.3
