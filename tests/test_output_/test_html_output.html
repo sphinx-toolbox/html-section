@@ -24,7 +24,6 @@
   </script>{% if sphinx_version >= (5, 2) %}
   <script src="_static/sphinx_highlight.js">
   </script>{% endif %}
-  <meta content="width=device-width, initial-scale=0.9, maximum-scale=0.9" name="viewport"/>
  </head>
  <body>
   <div class="document">
@@ -61,7 +60,9 @@
        <p>
         This section’s heading shouldn’t be present at all.
        </p>
-      </{% if docutils_version >= (0, 17) %}section{% else %}div{% endif %}>
+      </{% if docutils_version >= (0, 17) %}section{% else %}div{% endif %}>{% if sphinx_version >= (8, 1) %}
+      <div class="clearer">
+      </div>{% endif %}
      </div>
     </div>
    </div>

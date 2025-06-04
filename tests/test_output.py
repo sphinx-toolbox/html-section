@@ -16,7 +16,7 @@ from sphinx_toolbox.testing import HTMLRegressionFixture, LaTeXRegressionFixture
 def doc_root(tmp_pathplus: PathPlus) -> None:
 	doc_root = tmp_pathplus.parent / "test-html-section"
 	doc_root.maybe_make()
-	(doc_root / "conf.py").write_clean("extensions = ['html_section']")
+	(doc_root / "conf.py").write_clean("extensions = ['html_section']\nproject='Python'\nauthor='unknown'")
 
 	shutil.copy2(PathPlus(__file__).parent / "index.rst", doc_root / "index.rst")
 
@@ -46,6 +46,10 @@ def test_html_output(app: Sphinx, html_regression: HTMLRegressionFixture):
 		if div.get("src"):
 			div["src"] = div["src"].split("?v=")[0]
 			print(div["src"])
+
+	for meta in cast(List[Dict], page.find_all("meta")):
+		if meta.get("content", '') == "width=device-width, initial-scale=0.9, maximum-scale=0.9":
+			meta.extract()  # type: ignore[attr-defined]
 
 	html_regression.check(page, jinja2=True)
 

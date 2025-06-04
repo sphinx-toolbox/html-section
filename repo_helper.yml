@@ -25,12 +25,30 @@ python_versions:
      - 7.0
      - 7.1
      - 7.2
+     - 7.3
+     - 7.4
+     - 8.0
+     - 8.1
+     - 8.2
   3.8:
    matrix_exclude:
     sphinx:
      - 7.2
+     - 7.3
+     - 7.4
+     - 8.0
+     - 8.1
+     - 8.2
   3.9:
+   matrix_exclude:
+    sphinx:
+     - 8.0
+     - 8.1
+     - 8.2
   "3.10":
+   matrix_exclude:
+    sphinx:
+     - 8.2
   "3.11":
   "3.12":
    matrix_exclude:
@@ -87,10 +105,17 @@ third_party_version_matrix:
     - 7.0
     - 7.1
     - 7.2
+    - 7.3
+    - 7.4
+    - 8.0
+    - 8.1
+    - 8.2
   docutils:
     - 0.16
     - 0.17
     - 0.18
+    # - 0.19
+    # - 0.20
 
 classifiers:
  - 'Development Status :: 3 - Alpha'
@@ -104,5 +129,5 @@ classifiers:
 mypy_deps:
  - types-docutils
 
-tox_unmanaged:
- - testenv
+exclude_files:
+ - tox
