@@ -129,5 +129,6 @@ classifiers:
 mypy_deps:
  - types-docutils
 
-exclude_files:
- - tox
+tox_unmanaged:
+ - testenv
+ - fixups
