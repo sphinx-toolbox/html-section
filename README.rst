@@ -81,7 +81,7 @@ html-section
 .. |language| image:: https://img.shields.io/github/languages/top/sphinx-toolbox/html-section
 	:alt: GitHub top language
 
-.. |commits-since| image:: https://img.shields.io/github/commits-since/sphinx-toolbox/html-section/v0.4.0
+.. |commits-since| image:: https://img.shields.io/github/commits-since/sphinx-toolbox/html-section/v0.4.0.post1
 	:target: https://github.com/sphinx-toolbox/html-section/pulse
 	:alt: GitHub commits since tagged version
 
@@ -149,7 +149,7 @@ The section label ``Contents`` will only be shown with the LaTeX builder.
 However, the section content will still be visible, and the heading will appear in the table of contents.
 Consider using Sphinx's ``.. only:: latex`` directive for that.
 
-*New in version 0.4.0*
+*New in version 0.4.0.post1*
 
 
 .. code-block:: rest

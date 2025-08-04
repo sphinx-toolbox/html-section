@@ -4,7 +4,7 @@ build-backend = "whey"
 
 [project]
 name = "html-section"
-version = "0.4.0"
+version = "0.4.0.post1"
 description = "Sphinx extension to hide section headers with non-HTML builders."
 readme = "README.rst"
 keywords = [ "documentation", "sphinx", "sphinx-extension",]
