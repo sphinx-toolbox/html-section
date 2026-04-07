@@ -7,7 +7,7 @@ email: 'dominic@davis-foster.co.uk'
 username: 'sphinx-toolbox'
 assignee: 'domdfcoding'
 version: '0.4.0.post1'
-license: 'BSD'
+license: 'BSD-2-Clause'
 short_desc: 'Sphinx extension to hide section headers with non-HTML builders.'
 
 use_whey: true
